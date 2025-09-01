@@ -32,7 +32,7 @@ import { FiTrash2,FiEdit } from "react-icons/fi";
 import { styled } from "@mui/material/styles";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { FiRefreshCw } from "react-icons/fi";const API_URL =  "https://e-school-server.vercel.app";
+import { FiRefreshCw } from "react-icons/fi";const API_URL =  "https://manager-students-server.vercel.app";
 
 const StyledPaper = styled(Paper)(({ theme }) => ({ 
   padding: theme.spacing(3), 

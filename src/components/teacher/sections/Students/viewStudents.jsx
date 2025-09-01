@@ -133,7 +133,7 @@ export default function ViewStudents() {
   const handleReload = async () => {
     setReloading(true);
     try {
-      const response = await fetch("https://e-school-server.vercel.app/api/students");
+      const response = await fetch("https://manager-students-server.vercel.app/api/students");
       const data = await response.json();
       setStudents(data);
     } catch (err) {
@@ -160,7 +160,7 @@ export default function ViewStudents() {
   // update
   const handleUpdate = async () => {
     try {
-      const res = await fetch(`https://e-school-server.vercel.app/api/students/${selectedStudent.student_id}`, {
+      const res = await fetch(`https://manager-students-server.vercel.app/api/students/${selectedStudent.student_id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData)
@@ -200,7 +200,7 @@ export default function ViewStudents() {
   useEffect(() => {
     const fetchStudents = async () => {
       try {
-        const response = await fetch("https://e-school-server.vercel.app/api/students");
+        const response = await fetch("https://manager-students-server.vercel.app/api/students");
         if (!response.ok) throw new Error("فشل في جلب البيانات");
 
         const data = await response.json();
@@ -230,7 +230,7 @@ export default function ViewStudents() {
     if (!confirm("هل تريد حذف هذا الطالب وكل بياناته؟")) return;
   
     try {
-      const res = await fetch(`https://e-school-server.vercel.app/api/students/${studentId}`, {
+      const res = await fetch(`https://manager-students-server.vercel.app/api/students/${studentId}`, {
         method: "DELETE",
         
       });

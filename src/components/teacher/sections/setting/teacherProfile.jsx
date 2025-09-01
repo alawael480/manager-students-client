@@ -62,7 +62,7 @@ const TeacherProfileCard = () => {
     const newId = crypto.randomUUID(); // توليد ID جديد
   
     try {
-      const res = await fetch("https://e-school-server.vercel.app/api/teacher/update", {
+      const res = await fetch("https://manager-students-server.vercel.app/api/teacher/update", {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

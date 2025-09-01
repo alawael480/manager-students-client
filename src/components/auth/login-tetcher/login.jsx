@@ -42,7 +42,7 @@ export default function TeacherLoginPage() {
     setMessage({ type: "", text: "" });
 
     try {
-      const res = await fetch("https://e-school-server.vercel.app/api/teacher/login", {
+      const res = await fetch("https://manager-students-server.vercel.app/api/teacher/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ name, email, password }),

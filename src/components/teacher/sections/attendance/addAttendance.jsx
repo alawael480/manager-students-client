@@ -49,7 +49,7 @@ export default function AddAttendance() {
     setAttendanceData((prev) => ({ ...prev, date: today }));
 
     setLoadingStudents(true);
-    fetch("https://e-school-server.vercel.app/api/students")
+    fetch("https://manager-students-server.vercel.app/api/students")
       .then((res) => {
         if (!res.ok) throw new Error(res.statusText);
         return res.json();
@@ -77,7 +77,7 @@ export default function AddAttendance() {
     setSubmitError("");
 
     try {
-      const res = await fetch("https://e-school-server.vercel.app/api/attendance", {
+      const res = await fetch("https://manager-students-server.vercel.app/api/attendance", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

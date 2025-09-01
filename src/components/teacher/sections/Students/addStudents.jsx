@@ -54,7 +54,7 @@ const AddStudents = () => {
     setLoading(true);
 
     try {
-      const response = await fetch("https://e-school-server.vercel.app/api/students", {
+      const response = await fetch("https://manager-students-server.vercel.app/api/students", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),

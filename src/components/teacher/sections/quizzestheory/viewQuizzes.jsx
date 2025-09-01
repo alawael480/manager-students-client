@@ -40,7 +40,7 @@ const StyledPaper = styled(Paper)(({ theme }) => ({
 }));
 
 export default function ViewQuizzes() {
-  const API_URL =  "https://e-school-server.vercel.app";
+  const API_URL =  "https://manager-students-server.vercel.app";
 
   const [quizzes, setQuizzes] = useState([]);
   const [students, setStudents] = useState([]);

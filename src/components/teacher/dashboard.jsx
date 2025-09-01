@@ -185,7 +185,7 @@ export default function DashboardAdmin() {
     }
   }, []); 
   useEffect(() => {
-    fetch("https://e-school-server.vercel.app/api/teacher/me", {
+    fetch("https://manager-students-server.vercel.app/api/teacher/me", {
     })
       .then(res => res.json())
       .then(data => {

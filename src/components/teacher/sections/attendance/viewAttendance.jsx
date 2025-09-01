@@ -63,8 +63,8 @@ export default function ViewAttendance() {
 
     try {
       const [stuRes, attRes] = await Promise.all([
-        fetch("https://e-school-server.vercel.app/api/students"),
-        fetch("https://e-school-server.vercel.app/api/attendance"),
+        fetch("https://manager-students-server.vercel.app/api/students"),
+        fetch("https://manager-students-server.vercel.app/api/attendance"),
       ]);
       if (!stuRes.ok || !attRes.ok) throw new Error("خطأ في الطلب");
 
@@ -142,7 +142,7 @@ export default function ViewAttendance() {
     if (!confirm("هل تريد حذف هذا السجل؟")) return;
     try {
       const res = await fetch(
-        `https://e-school-server.vercel.app/api/attendance/${id}`,
+        `https://manager-students-server.vercel.app/api/attendance/${id}`,
         { method: "DELETE" }
       );
       if (!res.ok) throw new Error("فشل الحذف");
@@ -171,7 +171,7 @@ export default function ViewAttendance() {
     setEditError("");
     try {
       const res = await fetch(
-        `https://e-school-server.vercel.app/api/attendance/${editData.id}`,
+        `https://manager-students-server.vercel.app/api/attendance/${editData.id}`,
         {
           method: "PUT",
           headers: { "Content-Type": "application/json" },

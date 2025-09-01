@@ -28,7 +28,7 @@ export default function ViewAttendanceByMonth() {
       if (!studentId) return [];
 
       const res = await fetch(
-        `https://e-school-server.vercel.app/api/students/account/${studentId}`
+        `https://manager-students-server.vercel.app/api/students/account/${studentId}`
       );
       const json = await res.json();
       if (!res.ok) throw new Error(json.message || "Fetch failed");

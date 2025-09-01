@@ -20,7 +20,7 @@ import {
 import { styled } from "@mui/material/styles";
 
 import { CheckCircle, Error as ErrorIcon } from "@mui/icons-material";
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "https://e-school-server.vercel.app";
+const API_URL = process.env.NEXT_PUBLIC_API_URL || "https://manager-students-server.vercel.app";
 
 const FormContainer = styled(Paper)(({ theme }) => ({
   padding: theme.spacing(3),

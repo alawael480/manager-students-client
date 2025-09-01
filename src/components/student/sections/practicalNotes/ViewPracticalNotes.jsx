@@ -49,7 +49,7 @@ export default function ViewPrecticalNotes() {
     try {
       const studentId = localStorage.getItem("studentId");
       if (!studentId) return [];
-      const res = await fetch(`https://e-school-server.vercel.app/api/students/account/${studentId}`);
+      const res = await fetch(`https://manager-students-server.vercel.app/api/students/account/${studentId}`);
       const json = await res.json();
       if (!res.ok) throw new Error(json.message || "Fetch failed");
   

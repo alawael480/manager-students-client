@@ -23,11 +23,11 @@ import {
   LocationOn,
   Send,
 } from "@mui/icons-material";
-import DesignServicesIcon from '@mui/icons-material/DesignServices';
+import DesignServicesIcon from "@mui/icons-material/DesignServices";
 import { useState } from "react";
-import AboutIslam from "../home/aboutislam/aboutIslam"; 
-import AddTaskIcon from '@mui/icons-material/AddTask';
-import SchoolIcon from '@mui/icons-material/School';
+import AboutIslam from "../home/aboutislam/aboutIslam";
+import AddTaskIcon from "@mui/icons-material/AddTask";
+import SchoolIcon from "@mui/icons-material/School";
 const Footer = () => {
   const theme = useTheme();
   const [openModal, setOpenModal] = useState(false);
@@ -76,73 +76,93 @@ const Footer = () => {
                   WebkitTextFillColor: "transparent",
                 }}
               >
-                معهد الاوائل التعليمي <SchoolIcon style={{color:"#0D8CAB"}}/>
+                معهد الاوائل التعليمي{" "}
+                <SchoolIcon style={{ color: "#0D8CAB" }} />
               </Typography>
             </Box>
             <Typography variant="body2" sx={{ mb: 3, color: "text.secondary" }}>
               نقدم أفضل البرامج التعليمية لتأهيل جيل رقمي متميز بأحدث المناهج
               وأفضل المدربين.
             </Typography>
-
-        
-        
           </Grid>
 
-          {/* روابط سريعة */}
-
-          {/* النشرة البريدية */}
           <Grid item xs={12} md={4}>
             {/* معلومات الاتصال */}
-            <Box sx={{ mt: 3,  }}>
-              <Box sx={{ display: "flex", alignItems: "center", mb: 1,direction: "ltr" }}>
+            <Box sx={{ mt: 3 }}>
+              <Box
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  mb: 1,
+                  direction: "ltr",
+                }}
+              >
                 <Phone
                   sx={{ color: "primary.main", mr: 1, fontSize: "1rem" }}
                 />
                 <Typography variant="body2" color="text.secondary">
-                   +963944412860
+                  +963944412860
                 </Typography>
-                
               </Box>
-              <Box sx={{ display: "flex", alignItems: "center", mb: 1,direction: "ltr" }}>
-               <Phone
+              <Box
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  mb: 1,
+                  direction: "ltr",
+                }}
+              >
+                <Phone
                   sx={{ color: "primary.main", mr: 1, fontSize: "1rem" }}
                 />
                 <Typography variant="body2" color="text.secondary">
-                +963966263995
+                  +963966263995
                 </Typography>
-                 
               </Box>
-              <Box sx={{ display: "flex", alignItems: "center",direction: "ltr" }}>
+              <Box
+                sx={{ display: "flex", alignItems: "center", direction: "ltr" }}
+              >
                 <Facebook
                   sx={{ color: "primary.main", mr: 1, fontSize: "1rem" }}
                 />
-              
-              <Link href="https://www.facebook.com/share/19mM3fEsd7/" style={{textDecoration:"none"}}>
-                <Typography variant="body2" color="text.secondary"
-                
+
+                <Link
+                  href="https://www.facebook.com/share/19mM3fEsd7/"
+                  style={{ textDecoration: "none" }}
                 >
-                   {" "}
-                   معهد الاوائل
-                </Typography>
+                  <Typography variant="body2" color="text.secondary">
+                    {" "}
+                    معهد الاوائل
+                  </Typography>
                 </Link>
               </Box>
-              <Box sx={{ display: "flex", alignItems: "center",direction: "ltr" }}>
+              <Box
+                sx={{ display: "flex", alignItems: "center", direction: "ltr" }}
+              >
                 <LocationOn
                   sx={{ color: "primary.main", mr: 1, fontSize: "1rem" }}
                 />
                 <Typography variant="body2" color="text.secondary">
-                  حلب ,الجميلية, جانب جامع الصديق {" "}
+                  حلب ,الجميلية, جانب جامع الصديق{" "}
                 </Typography>
               </Box>
-              <Box sx={{ display: "flex", alignItems: "center",direction: "ltr" }}>
-              <AddTaskIcon sx={{ color: "primary.main", mr: 1, fontSize: "1rem" }}/>
-                 <Typography
- variant="body2"
-  sx={{ color: "primary.main",cursor:"pointer", textDecoration: "underline" }}
-  onClick={() => setOpenModal(true)}
->
-  احجز تصميمك الآن مع إسلام هدايا 
-</Typography>
+              <Box
+                sx={{ display: "flex", alignItems: "center", direction: "ltr" }}
+              >
+                <AddTaskIcon
+                  sx={{ color: "primary.main", mr: 1, fontSize: "1rem" }}
+                />
+                <Typography
+                  variant="body2"
+                  sx={{
+                    color: "primary.main",
+                    cursor: "pointer",
+                    textDecoration: "underline",
+                  }}
+                  onClick={() => setOpenModal(true)}
+                >
+                  احجز تصميمك الآن مع إسلام هدايا
+                </Typography>
               </Box>
             </Box>
           </Grid>
@@ -160,9 +180,8 @@ const Footer = () => {
         >
           <Typography variant="body2" color="text.secondary">
             . ©جميع الحقوق محفوظة.{new Date().getFullYear()}
-            
           </Typography>
-          
+
           <Box sx={{ display: "flex", gap: 2, mt: { xs: 2, sm: 0 } }}>
             <Link
               href="/"
@@ -193,7 +212,6 @@ const Footer = () => {
       </Container>
       <AboutIslam open={openModal} handleClose={() => setOpenModal(false)} />
     </Box>
-    
   );
 };
 

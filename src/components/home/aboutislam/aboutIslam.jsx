@@ -35,7 +35,7 @@ const AboutIslam = ({ open, handleClose }) => {
               fontSize: { xs: 28, sm: 36 },
               boxShadow: "0 4px 12px rgba(0,0,0,0.2)",
             }}
-            src="https://my-profile-personal-nextjs.vercel.app/logo/my-photo.jpg"
+            src="https://my-profile-personal-nextjs.vercel.app/logo/my-photo2.jpg"
           />
           <Typography
             variant="h6"

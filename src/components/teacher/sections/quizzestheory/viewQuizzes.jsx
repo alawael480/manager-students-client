@@ -26,13 +26,13 @@ import {
   DialogActions,
   TextField,
   Button,
-  InputAdornment
+  InputAdornment,
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import {DeleteIcon} from "@mui/icons-material/Delete";
-import { FiTrash2,FiEdit } from "react-icons/fi";
+import { DeleteIcon } from "@mui/icons-material/Delete";
+import { FiTrash2, FiEdit } from "react-icons/fi";
 import EditIcon from "@mui/icons-material/Edit";
-import { FiRefreshCw } from 'react-icons/fi';
+import { FiRefreshCw } from "react-icons/fi";
 const StyledPaper = styled(Paper)(({ theme }) => ({
   padding: theme.spacing(3),
   borderRadius: "1rem",
@@ -40,7 +40,7 @@ const StyledPaper = styled(Paper)(({ theme }) => ({
 }));
 
 export default function ViewQuizzes() {
-  const API_URL =  "https://manager-students-server.vercel.app";
+  const API_URL = "https://manager-students-server.vercel.app";
 
   const [quizzes, setQuizzes] = useState([]);
   const [students, setStudents] = useState([]);
@@ -97,7 +97,7 @@ export default function ViewQuizzes() {
         setQuizzes(Array.isArray(quizData) ? quizData : quizData.data);
       } catch (err) {
         console.error("Load data error:", err);
-        setError("فشل في جلب البيانات. تأكد من أن الخادم يعمل.");
+        setError("فشل في جلب البيانات. تأكد من أتصال الانترنيت المستقر.");
       } finally {
         setLoading(false);
       }
@@ -141,7 +141,9 @@ export default function ViewQuizzes() {
     if (!editData.quiz_title.trim()) errs.quiz_title = "العنوان مطلوب";
     if (!editData.quiz_name) errs.quiz_name = "اختر المادة";
     if (!editData.quiz_date) errs.quiz_date = "التاريخ مطلوب";
-    if (!editData.quiz_grade.trim()) errs.quiz_grade = "الدرجة مطلوبة";
+    if (!editData.quiz_grade?.toString().trim()) {
+      errs.quiz_grade = "الدرجة مطلوبة";
+    }
     setEditErrors(errs);
     return Object.keys(errs).length === 0;
   };
@@ -156,15 +158,22 @@ export default function ViewQuizzes() {
       const res = await fetch(`${API_URL}/api/quiz/${editData.id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(editData),
+        body: JSON.stringify({
+          id: editData.id,
+          student_id: editData.student_id,
+          quiz_title: editData.quiz_title,
+          quiz_name: editData.quiz_name,
+          quiz_date: editData.quiz_date,
+          quiz_grade: editData.quiz_grade,
+          type: editData.type || "theory",
+        }),
       });
+
       const payload = await res.json();
       if (!res.ok) throw new Error(payload.message || "خطأ غير معروف");
 
-      // update local list
-      setQuizzes((prev) =>
-        prev.map((q) => (q.id === editData.id ? { ...editData } : q))
-      );
+      // إعادة تحميل البيانات من السيرفر للتأكد من الحفظ
+      await handleReload();
       handleEditClose();
     } catch (err) {
       console.error("Edit quiz error:", err);
@@ -173,7 +182,6 @@ export default function ViewQuizzes() {
       setEditSubmitting(false);
     }
   };
-
   const handleDelete = async (id) => {
     if (!window.confirm("هل أنت متأكد من حذف هذا الكويز؟")) return;
     try {
@@ -181,36 +189,49 @@ export default function ViewQuizzes() {
         method: "DELETE",
       });
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
-      setQuizzes(prev => prev.filter(q => q.id !== id));
+      setQuizzes((prev) => prev.filter((q) => q.id !== id));
     } catch (err) {
       console.error("Delete quiz error:", err);
       alert("خطأ أثناء حذف الكويز. حاول مجددًا.");
     }
   };
 
-  const uniqueSections = [...new Set(students.map(student => student.section).filter(Boolean))];
-  
+  const uniqueSections = [
+    ...new Set(students.map((student) => student.section).filter(Boolean)),
+  ];
+
   // student filter list
   const uniqueStudents = students.map((s) => ({
     id: s.student_id,
     name: s.name,
-    section: s.section // إضافة القسم للاستخدام في الفلترة
+    section: s.section, // إضافة القسم للاستخدام في الفلترة
   }));
 
   // filtered quizzes - التصحيح هنا
   const filteredQuizzes = quizzes.filter((quiz) => {
     // البحث عن الطالب المرتبط بهذا الكويز
-    const student = students.find(s => s.student_id === quiz.student_id);
-    
-    const matchesStudent = !selectedStudent || quiz.student_id === selectedStudent;
-    const matchesSubject = !selectedSubject || quiz.quiz_name === selectedSubject;
-    const matchesSection = !sectionFilter || (student && student.section === sectionFilter);
-    const matchesSearch = !searchTerm || 
-      (student && student.name?.toLowerCase().includes(searchTerm.toLowerCase())) ||
+    const student = students.find((s) => s.student_id === quiz.student_id);
+    const matchesType = quiz.type === "theory";
+    const matchesStudent =
+      !selectedStudent || quiz.student_id === selectedStudent;
+    const matchesSubject =
+      !selectedSubject || quiz.quiz_name === selectedSubject;
+    const matchesSection =
+      !sectionFilter || (student && student.section === sectionFilter);
+    const matchesSearch =
+      !searchTerm ||
+      (student &&
+        student.name?.toLowerCase().includes(searchTerm.toLowerCase())) ||
       quiz.quiz_title?.toLowerCase().includes(searchTerm.toLowerCase()) ||
       quiz.quiz_name?.toLowerCase().includes(searchTerm.toLowerCase());
-    
-    return matchesStudent && matchesSubject && matchesSection && matchesSearch;
+
+    return (
+      matchesType &&
+      matchesStudent &&
+      matchesSubject &&
+      matchesSection &&
+      matchesSearch
+    );
   });
 
   if (loading) {
@@ -228,15 +249,15 @@ export default function ViewQuizzes() {
         fetch(`${API_URL}/api/students`),
         fetch(`${API_URL}/api/quiz`),
       ]);
-      
+
       if (!studRes.ok) throw new Error("فشل في جلب الطلاب");
       if (!quizRes.ok) throw new Error("فشل في جلب الكويزات");
-      
+
       const [studData, quizData] = await Promise.all([
         studRes.json(),
         quizRes.json(),
       ]);
-      
+
       setStudents(studData);
       setQuizzes(Array.isArray(quizData) ? quizData : quizData.data);
     } catch (err) {
@@ -262,21 +283,25 @@ export default function ViewQuizzes() {
           }}
         >
           <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-            <svg 
-              style={{ fontSize: "1.5rem", color: "#2563eb" }} 
-              fill="none" 
-              viewBox="0 0 24 24" 
+            <svg
+              style={{ fontSize: "1.5rem", color: "#2563eb" }}
+              fill="none"
+              viewBox="0 0 24 24"
               stroke="currentColor"
             >
-              <path 
-                strokeLinecap="round" 
-                strokeLinejoin="round" 
-                strokeWidth={2} 
-                d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" 
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
               />
             </svg>
             <Typography
-              sx={{ fontWeight: "bold", color: "grey.800", fontSize:{xs:"17px",md:"22px",lg:"25px"}}}
+              sx={{
+                fontWeight: "bold",
+                color: "grey.800",
+                fontSize: { xs: "17px", md: "22px", lg: "25px" },
+              }}
             >
               إدارة الكويزات النظرية
             </Typography>
@@ -306,13 +331,15 @@ export default function ViewQuizzes() {
           )}
 
           {/* فلترات البحث */}
-          <Box sx={{ 
-            display: "flex", 
-            flexDirection: { xs: "column", sm: "row" }, 
-            alignItems: "center", 
-            mb: 3, 
-            gap: 2 
-          }}>
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: { xs: "column", sm: "row" },
+              alignItems: "center",
+              mb: 3,
+              gap: 2,
+            }}
+          >
             <TextField
               placeholder="ابحث عن طلاب أو مواد أو عناوين..."
               value={searchTerm}
@@ -349,8 +376,10 @@ export default function ViewQuizzes() {
                 },
               }}
             />
-            
-            <FormControl sx={{ minWidth: 180, width: { xs: "100%", sm: "auto" } }}>
+
+            <FormControl
+              sx={{ minWidth: 180, width: { xs: "100%", sm: "auto" } }}
+            >
               <InputLabel>اختر الطالب</InputLabel>
               <Select
                 value={selectedStudent}
@@ -367,7 +396,9 @@ export default function ViewQuizzes() {
               </Select>
             </FormControl>
 
-            <FormControl sx={{ minWidth: 180, width: { xs: "100%", sm: "auto" } }}>
+            <FormControl
+              sx={{ minWidth: 180, width: { xs: "100%", sm: "auto" } }}
+            >
               <InputLabel>اختر المادة</InputLabel>
               <Select
                 value={selectedSubject}
@@ -377,12 +408,16 @@ export default function ViewQuizzes() {
               >
                 <MenuItem value="">كل المواد</MenuItem>
                 {subjectOptions.map((subject) => (
-                  <MenuItem key={subject} value={subject}>{subject}</MenuItem>
+                  <MenuItem key={subject} value={subject}>
+                    {subject}
+                  </MenuItem>
                 ))}
               </Select>
             </FormControl>
 
-            <FormControl sx={{ minWidth: 180, width: { xs: "100%", sm: "auto" } }}>
+            <FormControl
+              sx={{ minWidth: 180, width: { xs: "100%", sm: "auto" } }}
+            >
               <InputLabel>القسم</InputLabel>
               <Select
                 value={sectionFilter}
@@ -392,7 +427,9 @@ export default function ViewQuizzes() {
               >
                 <MenuItem value="">كل الأقسام</MenuItem>
                 {uniqueSections.map((section, index) => (
-                  <MenuItem key={index} value={section}>{section}</MenuItem>
+                  <MenuItem key={index} value={section}>
+                    {section}
+                  </MenuItem>
                 ))}
               </Select>
             </FormControl>
@@ -402,7 +439,15 @@ export default function ViewQuizzes() {
             <Table>
               <TableHead sx={{ backgroundColor: "grey.50" }}>
                 <TableRow>
-                  {["الطالب", "القسم", "العنوان", "المادة", "التاريخ", "العلامة", "الإجراءات"].map((header, i) => (
+                  {[
+                    "الطالب",
+                    "القسم",
+                    "العنوان",
+                    "المادة",
+                    "التاريخ",
+                    "العلامة",
+                    "الإجراءات",
+                  ].map((header, i) => (
                     <TableCell
                       key={i}
                       sx={{
@@ -420,17 +465,37 @@ export default function ViewQuizzes() {
               </TableHead>
               <TableBody>
                 {filteredQuizzes.map((quiz) => {
-                  const student = students.find((s) => s.student_id === quiz.student_id);
+                  const student = students.find(
+                    (s) => s.student_id === quiz.student_id
+                  );
                   return (
                     <TableRow key={quiz.id} hover>
-                      <TableCell sx={{ textAlign: "right" }}>{student?.name || quiz.student_id}</TableCell>
-                      <TableCell sx={{ textAlign: "right" }}>{student?.section || "غير محدد"}</TableCell>
-                      <TableCell sx={{ textAlign: "right" }}>{quiz.quiz_title}</TableCell>
-                      <TableCell sx={{ textAlign: "right" }}>{quiz.quiz_name}</TableCell>
-                      <TableCell sx={{ textAlign: "right" }}>{quiz.quiz_date}</TableCell>
-                      <TableCell sx={{ textAlign: "right" }}>{quiz.quiz_grade}</TableCell>
+                      <TableCell sx={{ textAlign: "right" }}>
+                        {student?.name || quiz.student_id}
+                      </TableCell>
+                      <TableCell sx={{ textAlign: "right" }}>
+                        {student?.section || "غير محدد"}
+                      </TableCell>
+                      <TableCell sx={{ textAlign: "right" }}>
+                        {quiz.quiz_title}
+                      </TableCell>
+                      <TableCell sx={{ textAlign: "right" }}>
+                        {quiz.quiz_name}
+                      </TableCell>
+                      <TableCell sx={{ textAlign: "right" }}>
+                        {quiz.quiz_date}
+                      </TableCell>
+                      <TableCell sx={{ textAlign: "right" }}>
+                        {quiz.quiz_grade}
+                      </TableCell>
                       <TableCell align="center">
-                        <Box sx={{ display: "flex", gap: 1, justifyContent: "center" }}>
+                        <Box
+                          sx={{
+                            display: "flex",
+                            gap: 1,
+                            justifyContent: "center",
+                          }}
+                        >
                           <IconButton
                             onClick={() => handleEditClick(quiz)}
                             sx={{ color: "#2563eb" }}
@@ -464,7 +529,12 @@ export default function ViewQuizzes() {
         </StyledPaper>
 
         {/* Edit Modal */}
-        <Dialog open={editOpen} onClose={handleEditClose} maxWidth="sm" fullWidth>
+        <Dialog
+          open={editOpen}
+          onClose={handleEditClose}
+          maxWidth="sm"
+          fullWidth
+        >
           <DialogTitle>تعديل الكويز</DialogTitle>
           <DialogContent dividers>
             {editError && (
@@ -570,6 +640,6 @@ export default function ViewQuizzes() {
           </DialogActions>
         </Dialog>
       </Box>
- </Box>
-);
+    </Box>
+  );
 }

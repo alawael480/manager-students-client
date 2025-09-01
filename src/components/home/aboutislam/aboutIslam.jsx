@@ -1,4 +1,3 @@
-
 import { Modal, Box, Typography, Button, Avatar, Stack } from "@mui/material";
 import { FaWhatsapp } from "react-icons/fa";
 
@@ -10,14 +9,14 @@ const AboutIslam = ({ open, handleClose }) => {
     <Modal open={open} onClose={handleClose}>
       <Box
         sx={{
-          width: { xs: "90%", sm: 420 },
+          width: { xs: "90%", sm: 420, md: 480 }, // أحجام مختلفة للشاشات
           bgcolor: "rgba(255,255,255,0.85)",
           backdropFilter: "blur(12px)",
           borderRadius: 4,
           boxShadow: "0 8px 32px rgba(0,0,0,0.2)",
-          p: 4,
+          p: { xs: 3, sm: 4 }, // padding أصغر على الشاشات الصغيرة
           mx: "auto",
-          mt: "8%",
+          mt: { xs: "20%", sm: "10%", md: "6%" }, // تعديل المسافة من الأعلى
           outline: "none",
           animation: "fadeIn 0.4s ease-in-out",
           "@keyframes fadeIn": {
@@ -31,17 +30,18 @@ const AboutIslam = ({ open, handleClose }) => {
           <Avatar
             sx={{
               bgcolor: "primary.main",
-              width: 72,
-              height: 72,
-              fontSize: 36,
+              width: { xs: 64, sm: 72, md: 80 }, // حجم الصورة يتغير حسب الشاشة
+              height: { xs: 64, sm: 72, md: 80 },
+              fontSize: { xs: 28, sm: 36 },
               boxShadow: "0 4px 12px rgba(0,0,0,0.2)",
             }}
-            src="/my-photo .jpg"
-            
+            src="https://my-profile-personal-nextjs.vercel.app/logo/my-photo.jpg"
+          />
+          <Typography
+            variant="h6"
+            fontWeight="bold"
+            sx={{ fontSize: { xs: "1.1rem", sm: "1.25rem" } }}
           >
-           
-          </Avatar>
-          <Typography variant="h6" fontWeight="bold">
             من هو إسلام؟
           </Typography>
         </Stack>
@@ -50,11 +50,14 @@ const AboutIslam = ({ open, handleClose }) => {
         <Typography
           variant="body1"
           mb={3}
-          sx={{ textAlign: "center", lineHeight: 1.8 }}
+          sx={{
+            textAlign: "center",
+            lineHeight: 1.8,
+            fontSize: { xs: "0.9rem", sm: "1rem" },
+          }}
         >
-          مطوّر <b>Full Stack</b> عملي ومنظّم، يبني أنظمة تعليمية متكاملة
-          بمعمارية قابلة للتوسع، ويركّز على التكامل بين الواجهات الامامية والخلفية
-          مع اهتمام كبير بالحماية والتفويض الدقيق.
+          مهندس برمجيات - يبني أنظمة ويب وموبايل آمنة وقابلة للتوسع مع واجهات
+          مرنة ومنطق منظم ونظيف عبر الأنظمة.
         </Typography>
 
         {/* زر واتساب */}
@@ -68,8 +71,9 @@ const AboutIslam = ({ open, handleClose }) => {
             bgcolor: "#25D366",
             "&:hover": { bgcolor: "#1ebe5d" },
             fontWeight: "bold",
-            py: 1.2,
+            py: { xs: 1, sm: 1.2 },
             borderRadius: 3,
+            fontSize: { xs: "0.9rem", sm: "1rem" },
             boxShadow: "0 4px 12px rgba(37, 211, 102, 0.4)",
           }}
         >

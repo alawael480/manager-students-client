@@ -37,33 +37,38 @@ export default function TeacherLoginPage() {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState({ type: "", text: "" });
 
-
   const router = useRouter();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
     setMessage({ type: "", text: "" });
-  
+
     try {
-      const res = await fetch("https://manager-students-server.vercel.app/api/auth/login", {
-        method: "POST",
-        
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ student_id: studentId }),
-      });
-  
+      const cleanId = studentId.trim(); // إزالة المسافات من البداية والنهاية
+
+      const res = await fetch(
+        "https://manager-students-server.vercel.app/api/auth/login",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ student_id: cleanId }),
+        }
+      );
+
       const result = await res.json();
-  
+
       if (!res.ok) {
         throw new Error(result.message || "خطأ في تسجيل الدخول");
       }
-  
-      // حفظ البيانات في localStorage
+
       localStorage.setItem("studentName", result.student.name);
       localStorage.setItem("studentId", result.student.student_id);
-      localStorage.setItem("studentSpecialization", result.student.specialization);
-  
+      localStorage.setItem(
+        "studentSpecialization",
+        result.student.specialization
+      );
+
       setMessage({ type: "success", text: "تم تسجيل الدخول" });
       router.push("/student/my-account");
     } catch (err) {
@@ -112,23 +117,23 @@ export default function TeacherLoginPage() {
             <Box sx={{ mb: 3 }}>
               {/* Password Field */}
               <TextField
-  fullWidth
-  margin="normal"
-  label="المعرف الشخصي"
-  type="text"
-  variant="outlined"
-  placeholder="ادخل المعرف الشخصي"
-  required
-  value={studentId}
-  onChange={(e) => setStudentId(e.target.value)}
-  InputProps={{
-    startAdornment: (
-      <InputAdornment position="start">
-        <FiLock />
-      </InputAdornment>
-    ),
-  }}
-/>
+                fullWidth
+                margin="normal"
+                label="المعرف الشخصي"
+                type="text"
+                variant="outlined"
+                placeholder="ادخل المعرف الشخصي"
+                required
+                value={studentId}
+                onChange={(e) => setStudentId(e.target.value.trimStart())}
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <FiLock />
+                    </InputAdornment>
+                  ),
+                }}
+              />
             </Box>
 
             {/* Submit Button */}
@@ -172,7 +177,7 @@ export default function TeacherLoginPage() {
               }}
               startIcon={<HomeIcon />}
             >
-              <Link href="/" style={{ color: "#ffff",textDecoration:"none" }}>
+              <Link href="/" style={{ color: "#ffff", textDecoration: "none" }}>
                 {" "}
                 الرجوع الى الصفحة الرئيسية
               </Link>

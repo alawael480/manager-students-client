@@ -13,7 +13,7 @@ import {
   DialogTitle,
   DialogContent,
   DialogActions,
-  Box
+  Box,
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { FaUserCheck, FaUserTimes } from "react-icons/fa";
@@ -77,26 +77,47 @@ export default function AddAttendance() {
     setSubmitError("");
 
     try {
-      const res = await fetch("https://manager-students-server.vercel.app/api/attendance", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          student_id: attendanceData.studentId,
-          attendance_date: attendanceData.date,
-          status:
-            attendanceData.status === "حاضر" ? "present" : "absent",
-        }),
-      });
+      const checkRes = await fetch(
+        `https://manager-students-server.vercel.app/api/attendance?student_id=${attendanceData.studentId}&attendance_date=${attendanceData.date}`
+      );
+
+      if (!checkRes.ok) throw new Error("خطأ في التحقق من السجلات");
+
+      const existing = await checkRes.json();
+
+      if (Array.isArray(existing) && existing.length > 0) {
+        setModal({
+          open: true,
+          success: true,
+          message: "!هذا الطالب تمت اضافته مسبقا",
+        });
+        setSubmitting(false);
+        return; // إيقاف العملية
+      }
+
+      // ✅ إذا لم يوجد سجل، نكمل الحفظ
+      const res = await fetch(
+        "https://manager-students-server.vercel.app/api/attendance",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            student_id: attendanceData.studentId,
+            attendance_date: attendanceData.date,
+            status: attendanceData.status === "حاضر" ? "present" : "absent",
+          }),
+        }
+      );
+
       if (!res.ok) throw new Error("خطأ في الخادم");
 
       await res.json();
-      setAttendanceData((prev) => ({
-        ...prev,
+      setAttendanceData({
         studentId: "",
+        date: attendanceData.date,
         status: "",
-      }));
+      });
 
-      // فتح المودال بنجاح
       setModal({
         open: true,
         success: true,
@@ -105,8 +126,6 @@ export default function AddAttendance() {
     } catch (err) {
       console.error(err);
       setSubmitError("لم نتمكن من حفظ التفقد");
-
-      // فتح المودال بفشل
       setModal({
         open: true,
         success: false,
@@ -124,7 +143,7 @@ export default function AddAttendance() {
           fontWeight={600}
           mb={2}
           color="#1f2937"
-          sx={{fontSize:{xs:"17px",md:"22px",lg:"25px"}}}
+          sx={{ fontSize: { xs: "17px", md: "22px", lg: "25px" } }}
         >
           تسجيل حالة الطالب
         </Typography>
@@ -152,10 +171,7 @@ export default function AddAttendance() {
                 </MenuItem>
               ) : (
                 students.map((s) => (
-                  <MenuItem
-                    key={s.student_id}
-                    value={s.student_id}
-                  >
+                  <MenuItem key={s.student_id} value={s.student_id}>
                     {s.name}
                   </MenuItem>
                 ))
@@ -192,24 +208,24 @@ export default function AddAttendance() {
                       attendanceData.status === "حاضر"
                         ? "success.main"
                         : attendanceData.status === "غائب"
-                        ? "error.main"
-                        : "grey.400",
+                          ? "error.main"
+                          : "grey.400",
                   },
                   "&:hover fieldset": {
                     borderColor:
                       attendanceData.status === "حاضر"
                         ? "success.dark"
                         : attendanceData.status === "غائب"
-                        ? "error.dark"
-                        : "grey.600",
+                          ? "error.dark"
+                          : "grey.600",
                   },
                   "&.Mui-focused fieldset": {
                     borderColor:
                       attendanceData.status === "حاضر"
                         ? "success.main"
                         : attendanceData.status === "غائب"
-                        ? "error.main"
-                        : "primary.main",
+                          ? "error.main"
+                          : "primary.main",
                   },
                 },
               }}
@@ -227,9 +243,7 @@ export default function AddAttendance() {
 
           {submitError && (
             <Grid item xs={12}>
-              <Alert severity="error">
-                {submitError}
-              </Alert>
+              <Alert severity="error">{submitError}</Alert>
             </Grid>
           )}
 
@@ -255,16 +269,11 @@ export default function AddAttendance() {
               }}
               startIcon={
                 submitting ? (
-                  <CircularProgress
-                    size={20}
-                    color="inherit"
-                  />
+                  <CircularProgress size={20} color="inherit" />
                 ) : null
               }
             >
-              {submitting
-                ? "جاري الحفظ..."
-                : "حفظ التفقد"}
+              {submitting ? "جاري الحفظ..." : "حفظ التفقد"}
             </Button>
           </Grid>
         </Grid>
@@ -295,9 +304,7 @@ export default function AddAttendance() {
           </Typography>
         </DialogTitle>
         <DialogContent>
-          <Typography sx={{ textAlign: "center" }}>
-            {modal.message}
-          </Typography>
+          <Typography sx={{ textAlign: "center" }}>{modal.message}</Typography>
         </DialogContent>
         <DialogActions sx={{ justifyContent: "center" }}>
           <Button

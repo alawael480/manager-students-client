@@ -34,7 +34,7 @@ const navItems = [
 
 const whatsappNumbers = [
   { label: "الاستاذ نور عرب", number: "+963957853948" },
-  { label: "الاستاذ كامل عرب", number: "+963966263995" },
+  { label: "الاستاذ كامل عرب", number: "+963944412860" },
 ];
 
 const Header = () => {

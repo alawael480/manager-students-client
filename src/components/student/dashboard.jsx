@@ -2,21 +2,49 @@
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import {
-  Box, AppBar, Toolbar, IconButton, Drawer, List, ListItem, ListItemButton,
-  ListItemIcon, ListItemText, Avatar, Typography, Paper, Breadcrumbs, Button,
-  useTheme, useMediaQuery, styled, Tabs, Tab, Accordion, AccordionSummary, AccordionDetails
+  Box,
+  AppBar,
+  Toolbar,
+  IconButton,
+  Drawer,
+  List,
+  ListItem,
+  ListItemButton,
+  ListItemIcon,
+  ListItemText,
+  Avatar,
+  Typography,
+  Paper,
+  Breadcrumbs,
+  Button,
+  useTheme,
+  useMediaQuery,
+  styled,
+  Tabs,
+  Tab,
+  Accordion,
+  AccordionSummary,
+  AccordionDetails,
 } from "@mui/material";
-import { FiMenu, FiX, FiHome, FiCalendar, FiBookOpen, FiClipboard, FiLogOut } from "react-icons/fi";
+import {
+  FiMenu,
+  FiX,
+  FiHome,
+  FiCalendar,
+  FiBookOpen,
+  FiClipboard,
+  FiLogOut,
+} from "react-icons/fi";
 import PersonIcon from "@mui/icons-material/Person";
-import HomeIcon from '@mui/icons-material/Home';
+import HomeIcon from "@mui/icons-material/Home";
 import ViewQuizzes from "./sections/quizzes/viewQuizzes";
 import ViewPracticalQuiz from "./sections/practicalQuiz/ViewPracticalQuiz";
 import ViewExams from "./sections/exams/viewExams";
 import ViewPracticalNotes from "./sections/practicalNotes/ViewPracticalNotes";
 import ViewAttendance from "./sections/attendance/viewAttendance";
 import Link from "next/link";
-import AssignmentIndIcon from '@mui/icons-material/AssignmentInd';
-import BrushIcon from '@mui/icons-material/Brush'
+import AssignmentIndIcon from "@mui/icons-material/AssignmentInd";
+import BrushIcon from "@mui/icons-material/Brush";
 
 const DRAWER_WIDTH = 280;
 
@@ -31,14 +59,34 @@ const SidebarContent = ({ tabs, activeTab, onTabClick, onLogout }) => {
   const spec = localStorage.getItem("studentSpecialization");
 
   return (
-    <Box sx={{ width: "100%", height: "100%", display: "flex", flexDirection: "column" }}>
+    <Box
+      sx={{
+        width: "100%",
+        height: "100%",
+        display: "flex",
+        flexDirection: "column",
+      }}
+    >
       {/* Profile */}
-      <Box sx={{ display: "flex", alignItems: "center", p: 2, gap: 2, backgroundColor: "#0D8CAB" }}>
+      <Box
+        sx={{
+          display: "flex",
+          alignItems: "center",
+          p: 2,
+          gap: 2,
+          backgroundColor: "#0D8CAB",
+        }}
+      >
         <Avatar sx={{ bgcolor: "white", color: "primary.main" }}>
           <PersonIcon />
         </Avatar>
         <Box>
-          <Typography sx={{ color: "#fff" }} variant="subtitle1" fontWeight={600} noWrap>
+          <Typography
+            sx={{ color: "#fff" }}
+            variant="subtitle1"
+            fontWeight={600}
+            noWrap
+          >
             {name}
           </Typography>
           <Typography sx={{ color: "#fff" }} variant="body2" noWrap>
@@ -55,10 +103,15 @@ const SidebarContent = ({ tabs, activeTab, onTabClick, onLogout }) => {
               selected={activeTab === tab.id}
               onClick={() => onTabClick(tab.id)}
             >
-              <ListItemIcon sx={{ color: activeTab === tab.id ? "primary.main" : "gray" }}>
+              <ListItemIcon
+                sx={{ color: activeTab === tab.id ? "primary.main" : "gray" }}
+              >
                 {tab.icon}
               </ListItemIcon>
-              <ListItemText primary={tab.label} primaryTypographyProps={{ noWrap: true }} />
+              <ListItemText
+                primary={tab.label}
+                primaryTypographyProps={{ noWrap: true }}
+              />
             </ListItemButton>
           </ListItem>
         ))}
@@ -67,7 +120,10 @@ const SidebarContent = ({ tabs, activeTab, onTabClick, onLogout }) => {
         <ListItem disablePadding>
           <ListItemButton
             onClick={onLogout}
-            sx={{ color: "error.main", "&:hover": { backgroundColor: "#fee2e2" } }}
+            sx={{
+              color: "error.main",
+              "&:hover": { backgroundColor: "#fee2e2" },
+            }}
           >
             <ListItemIcon sx={{ color: "error.main" }}>
               <FiLogOut />
@@ -78,9 +134,22 @@ const SidebarContent = ({ tabs, activeTab, onTabClick, onLogout }) => {
       </List>
 
       {/* Footer */}
-      <Box sx={{ mt: 2, px: 2, py: 1, borderTop: 1, borderColor: "primary.main", textAlign: "center" }}>
-        <Typography variant="caption" sx={{ color: "primary.main", fontWeight: 500 }}>
-          <BrushIcon style={{ fontSize: "10px" }} /> تمت برمجة الموقع بواسطة إسلام هدايا
+      <Box
+        sx={{
+          mt: 2,
+          px: 2,
+          py: 1,
+          borderTop: 1,
+          borderColor: "primary.main",
+          textAlign: "center",
+        }}
+      >
+        <Typography
+          variant="caption"
+          sx={{ color: "primary.main", fontWeight: 500 }}
+        >
+          <BrushIcon style={{ fontSize: "10px" }} /> تمت برمجة الموقع بواسطة
+          إسلام هدايا
         </Typography>
       </Box>
     </Box>
@@ -105,12 +174,11 @@ export default function DashboardStudent() {
     { id: "Attendance", label: "التفقد", icon: <FiCalendar /> },
   ];
 
-useEffect(() => {
-  if (isDesktop) {
-    setDrawerOpen(true);
-  }
-}, [isDesktop]);
-
+  useEffect(() => {
+    if (isDesktop) {
+      setDrawerOpen(true);
+    }
+  }, [isDesktop]);
 
   useEffect(() => {
     const id = localStorage.getItem("studentId");
@@ -135,8 +203,11 @@ useEffect(() => {
     switch (activeTab) {
       case "Quizzes":
         return (
-          <Box sx={{ width: '100%',marginTop:"30px" }}>
-            <Tabs value={quizTab} onChange={(e, newValue) => setQuizTab(newValue)}>
+          <Box sx={{ width: "100%", marginTop: "30px" }}>
+            <Tabs
+              value={quizTab}
+              onChange={(e, newValue) => setQuizTab(newValue)}
+            >
               <Tab label="عرض الاختبارات النظرية" />
               <Tab label="عرض الاختبارات العملية" />
             </Tabs>
@@ -147,8 +218,11 @@ useEffect(() => {
 
       case "Exams":
         return (
-          <Box sx={{ width: '100%',marginTop:"30px"  }}>
-            <Tabs value={examTab} onChange={(e, newValue) => setExamTab(newValue)}>
+          <Box sx={{ width: "100%", marginTop: "30px" }}>
+            <Tabs
+              value={examTab}
+              onChange={(e, newValue) => setExamTab(newValue)}
+            >
               <Tab label="عرض المذاكرات النظرية" />
               <Tab label="عرض المذاكرات العملية" />
             </Tabs>
@@ -160,13 +234,12 @@ useEffect(() => {
       case "Attendance":
         return (
           <>
-              <AccordionSummary style={{marginTop:"30px" }}>
-                <Typography variant="subtitle1" fontWeight="bold">
-                  عرض التفقد
-                </Typography>
-              </AccordionSummary>
-                <ViewAttendance />
-             
+            <AccordionSummary style={{ marginTop: "30px" }}>
+              <Typography variant="subtitle1" fontWeight="bold">
+                عرض التفقد
+              </Typography>
+            </AccordionSummary>
+            <ViewAttendance />
           </>
         );
 
@@ -181,19 +254,39 @@ useEffect(() => {
       <AppBar
         position="fixed"
         sx={{
-          width: { xs: "100%", lg: drawerOpen ? `calc(100% - ${DRAWER_WIDTH}px)` : "100%" },
+          width: {
+            xs: "100%",
+            lg: drawerOpen ? `calc(100% - ${DRAWER_WIDTH}px)` : "100%",
+          },
           ml: { lg: drawerOpen ? `${DRAWER_WIDTH}px` : 0 },
         }}
       >
         <Toolbar sx={{ justifyContent: "space-between", px: { xs: 1, sm: 2 } }}>
-          <IconButton color="inherit" edge="start" onClick={toggleDrawer} sx={{ mr: 1 }}>
+          <IconButton
+            color="inherit"
+            edge="start"
+            onClick={toggleDrawer}
+            sx={{ mr: 1 }}
+          >
             {drawerOpen ? <FiX /> : <FiMenu />}
           </IconButton>
           <Typography variant="h6" style={{ color: "#FAF0BE" }} noWrap>
-            <AssignmentIndIcon />{"  "}
+            <AssignmentIndIcon />
+            {"  "}
           </Typography>
-          <Breadcrumbs separator="›" sx={{ color: "inherit", display: { xs: "none", sm: "flex" } }}>
-            <Link href="/" style={{ textDecoration: "none", fontSize: "20px", color: "#FAF0BE", fontWeight: "700" }}>
+          <Breadcrumbs
+            separator="›"
+            sx={{ color: "inherit", display: { xs: "none", sm: "flex" } }}
+          >
+            <Link
+              href="/"
+              style={{
+                textDecoration: "none",
+                fontSize: "20px",
+                color: "#FAF0BE",
+                fontWeight: "700",
+              }}
+            >
               <HomeIcon /> العودة الى الصفحة الرئيسية
             </Link>
           </Breadcrumbs>
@@ -202,10 +295,10 @@ useEffect(() => {
 
       {/* Drawer */}
       <Box component="nav">
-        <Drawer  variant={isDesktop ? "persistent" : "temporary"}
-  open={drawerOpen}
-  onClose={toggleDrawer}
-
+        <Drawer
+          variant={isDesktop ? "persistent" : "temporary"}
+          open={drawerOpen}
+          onClose={toggleDrawer}
           ModalProps={{ keepMounted: true }}
           sx={{
             "& .MuiDrawer-paper": {
@@ -235,10 +328,20 @@ useEffect(() => {
           p: { xs: 1, sm: 2, md: 3 },
           mt: { xs: 8, lg: 0 },
           ml: { lg: drawerOpen ? `${DRAWER_WIDTH}px` : 0 },
-          width: { xs: "100%", lg: drawerOpen ? `calc(100% - ${DRAWER_WIDTH}px)` : "100%" },
+          width: {
+            xs: "100%",
+            lg: drawerOpen ? `calc(100% - ${DRAWER_WIDTH}px)` : "100%",
+          },
         }}
       >
-        <Paper sx={{ borderRadius: 2, boxShadow: 1, p: { xs: 1, sm: 2 }, minHeight: "calc(100vh - 64px)" }}>
+        <Paper
+          sx={{
+            borderRadius: 2,
+            boxShadow: 1,
+            p: { xs: 1, sm: 2 },
+            minHeight: "calc(100vh - 64px)",
+          }}
+        >
           {renderContent()}
         </Paper>
       </Box>
